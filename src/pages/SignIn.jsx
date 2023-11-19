@@ -4,10 +4,10 @@ import { Button, Input } from "@nextui-org/react";
 import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 // Desc: Sign In page
-export default function SignIn({ isAuthenticatedSetter }) {
+export default function SignIn() {
     const [userData, setUserData] = useState({ userName: '', email: '', password: '' });
     const [signInPage, setSignInPage] = useState(true);
 
@@ -27,7 +27,7 @@ export default function SignIn({ isAuthenticatedSetter }) {
             .then((data) => {
                 console.log("-----------------------------------------");
                 console.log(data, "authData");
-                isAuthenticatedSetter(true); // Update the authentication state
+
                 navigationHistory('/game');
             })
             .catch((error) => {
@@ -58,7 +58,6 @@ export default function SignIn({ isAuthenticatedSetter }) {
 
                 console.log("-----------------------------------------");
                 console.log(data, "authData");
-                isAuthenticatedSetter(true);
                 navigationHistory('/game');
             })
             .catch((error) => {

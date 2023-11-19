@@ -10,8 +10,10 @@ export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef,
 
     useEffect(() => {
         console.log("Progressloaded is:", progressLoaded);
+        console.log("counter is:", counter);
 
-        if (nextScramble) {
+
+        if (!gameStart) {
             setCounter(0);
             setProgressLoaded(0);
             setStarted(false);
@@ -39,7 +41,7 @@ export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef,
                 console.log("Time is up!");
             }, 1000);
         }
-    }, [counter]);
+    }, [counter, gameStart]);
 
     return (
         <div>
@@ -48,9 +50,9 @@ export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef,
                 radius="sm"
                 classNames={{
                     base: "w-full",
-                    track: "drop-shadow-md border border-default",
+                    track: "shadow border border-default bg-slate-100",
                     indicator: `${progressLoaded < 40
-                        ? "bg-green-500"
+                        ? "bg-success-500"
                         : progressLoaded < 70
                             ? "bg-yellow-500"
                             : "bg-red-500"} `,

@@ -8,18 +8,18 @@ import SignIn from './pages/SignIn'
 import AuthRequired from './component/AuthRequired'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SignIn isAuthenticatedSetter={setIsAuthenticated} />} />
+          <Route path="/" element={<SignIn />} />
 
-          <Route element={<AuthRequired isAuthenticatedSetter={() => isAuthenticated} />}>
+          <Route element={<AuthRequired />}>
+            <Route path="/game" element={<GamePage />} />
           </Route>
-          <Route path="/game" element={<GamePage />} />
 
+          <Route path="*" element={<h1>Page not found</h1>} />
         </Routes>
       </BrowserRouter>
     </>
