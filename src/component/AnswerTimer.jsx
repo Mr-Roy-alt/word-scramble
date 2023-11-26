@@ -9,8 +9,8 @@ export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef,
     const intervalRef = useRef(null);
 
     useEffect(() => {
-        console.log("Progressloaded is:", progressLoaded);
-        console.log("counter is:", counter);
+        // console.log("Progressloaded is:", progressLoaded);
+        // console.log("counter is:", counter);
 
 
         if (!gameStart) {

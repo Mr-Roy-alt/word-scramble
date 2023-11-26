@@ -17,10 +17,9 @@ import Tour from '../js/tour.js';
 
 export default function PreferenceCard() {
     const [play, setPlay] = useState(false);
-    const [volume, setVolume] = useState(10);
+    const [volume, setVolume] = useState(5);
     const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
     const [isRandomAudioActive, setIsRandomAudioActive] = useState(false);
-    const [isAutoPlayActive, setIsAutoPlayActive] = useState(false);
     const [loopMusic, setLoopMusic] = useState(false);
     const [musicProgress, setMusicProgress] = useState(0);
     const audioRef = useRef(null);
@@ -33,7 +32,7 @@ export default function PreferenceCard() {
         setPlay(true);
         currentAudioRef.autoplay = true
         currentAudioRef.play()
-        console.log("Current music is: ", currentAudioIndex);
+        // console.log("Current music is: ", currentAudioIndex);
 
         // Listen for the 'ended' event and play the next track
         const handleAudioEnd = () => {
@@ -107,7 +106,7 @@ export default function PreferenceCard() {
                 <audio ref={audioRef} src={SoundData[currentAudioIndex].src} loop={loopMusic} autoPlay></audio>
             </div>
             <div
-                className="absolute h-full bg-gradient-to-r from-green-500 to-blue-500 -z-10"
+                className="absolute h-full bg-gradient-to-r from-slate-100 to-slate-500 -z-10"
                 style={{ width: `${musicProgress}%` }}
             />
             <CardBody>
@@ -170,7 +169,7 @@ export default function PreferenceCard() {
                                 variant="light"
                                 onClick={() => setLoopMusic(!loopMusic)}
                             >
-                                <RepeatOneIcon className={`${loopMusic ? "text-gray-950" : "text-foreground/80"}`} />
+                                <RepeatOneIcon className={`${loopMusic ? "text-gray-950" : "text-foreground/60"}`} />
                             </Button>
                             <Button
                                 isIconOnly
@@ -207,7 +206,7 @@ export default function PreferenceCard() {
                                 radius="full"
                                 variant="light"
                             >
-                                <ShuffleIcon className={`${isRandomAudioActive ? "text-gray-950" : "text-foreground/80"}`} />
+                                <ShuffleIcon className={`${isRandomAudioActive ? "text-gray-950" : "text-foreground/60"}`} />
                             </Button>
                         </div>
                     </div>

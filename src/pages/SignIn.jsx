@@ -32,14 +32,14 @@ export default function SignIn() {
         signInWithEmailAndPassword(auth, userData.email, userData.password)
             .then((data) => {
                 console.log("-----------------------------------------");
-                console.log(data, "authData");
+                // console.log(data, "authData");
 
                 navigationHistory('/game');
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode, errorMessage);
+                // console.log(errorCode, errorMessage);
                 alert(errorCode);
                 // ..
             });
@@ -79,7 +79,7 @@ export default function SignIn() {
                 });
 
                 console.log("-----------------------------------------");
-                console.log(data, "authData");
+                // console.log(data, "authData");
                 navigationHistory('/game');
             })
             .catch((error) => {

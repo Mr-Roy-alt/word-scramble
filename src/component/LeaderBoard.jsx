@@ -60,7 +60,7 @@ export default function LeaderBoard() {
                 isLoading={isLoading}
                 loadingContent={<Spinner color="green" />}
             >
-                {console.log(data)}
+                {/* {console.log(data)} */}
                 {
                     data.map((item, index) => (
                         <TableRow key={item.uuid} className={item.uuid === userId ? "bg-zinc-200 sticky top-0" : null}>

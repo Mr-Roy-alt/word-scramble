@@ -46,9 +46,9 @@ export default function GamePage() {
 
 
     useEffect(() => {
-        console.log("DOMloadedRef.current is: " + DOMloadedRef.current)
-        console.log("userDataExists is: " + userDataExists)
-        console.log("isFirstGame is: " + isFirstGame)
+        // console.log("DOMloadedRef.current is: " + DOMloadedRef.current)
+        // console.log("userDataExists is: " + userDataExists)
+        // console.log("isFirstGame is: " + isFirstGame)
         // const welcomeDriver = driver();
 
         // // Define the steps for introduction
@@ -247,20 +247,17 @@ export default function GamePage() {
 
     useEffect(() => {
         setHighScore(prevScore => (prevScore <= pointCount ? pointCount : prevScore))
-        console.log("High score is: " + highScore)
     }, [pointCount])
 
     function handleEndGame() {
         setGameStart(false);
         submitScore()
-        console.log("Game ended")
     }
 
     function endGame() {
         if (heartCount.length === 0) {
             setGameStart(false);
             setHeartCount([])
-            console.log("Game ended")
         }
     }
 
