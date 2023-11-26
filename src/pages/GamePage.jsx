@@ -160,6 +160,7 @@ export default function GamePage() {
         getRandomWord()
         setRevealedWord(currentWord)
         setHeartCount(["❤️", "❤️", "❤️", "❤️", "❤️"])
+        setRevealCount(5)
     }
 
     function onTimeUp() {
@@ -251,12 +252,14 @@ export default function GamePage() {
 
     function handleEndGame() {
         setGameStart(false);
+        setPointCount(0)
         submitScore()
     }
 
     function endGame() {
         if (heartCount.length === 0) {
             setGameStart(false);
+            setPointCount(0)
             setHeartCount([])
         }
     }
