@@ -46,6 +46,7 @@ export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef,
     return (
         <div>
             <Progress
+                id="timerProgress"
                 size="md"
                 radius="sm"
                 classNames={{

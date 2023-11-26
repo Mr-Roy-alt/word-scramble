@@ -12,7 +12,8 @@ import {
     Chip
 } from "@nextui-org/react";
 
-export default function App() {
+
+export default function LeaderBoard() {
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
     const userId = auth.currentUser.uid;
@@ -22,7 +23,7 @@ export default function App() {
             try {
                 onSnapshot(collection(db, 'leaderboard'), (querySnapshot) => {
                     const newData = querySnapshot.docs.map((doc) => doc.data());
-                    setData(newData.sort((a, b) => b.score - a.score));
+                    setData(newData.sort((a, b) => b.highestScore - a.highestScore));
                 })
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -76,4 +77,3 @@ export default function App() {
         </Table>
     );
 }
-

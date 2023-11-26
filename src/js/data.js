@@ -1,5 +1,24 @@
 // Check the list from C:\Users\leroy\Downloads\Fl_studio packs\vocabulary-list.pdf
 
+// import { auth, db, } from '../firebaseConfig';
+// import { doc, updateDoc } from "firebase/firestore";
+
+// async function updateData() {
+//     const docRef = doc(db, "words", "zK4wx0c3jZHgsRM53Vd7");
+
+//     if (auth.currentUser) {
+//         try {
+//             await updateDoc(docRef, {
+//                 wordArray: wordList
+//             })
+//             console.log("Document successfully updated!");
+//         } catch (e) {
+//             console.error("Error updating document: ", e);
+//         }
+//     }
+// }
+
+
 export const wordList = [
     {
         word: 'apple',
@@ -12507,6 +12526,7 @@ export const wordList = [
     },
 ]
 
+// updateData()
 
 export const bgImage = ["assets/image/bg_2.png", "assets/image/bg_3.png", "assets/image/bg_bggenerator_com (1).png", "assets/image/bg_bggenerator_com.png", "assets/image/bg1.png"]
 

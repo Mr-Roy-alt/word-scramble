@@ -3,13 +3,16 @@ import { Input, Button, Chip } from "@nextui-org/react";
 import { wordList } from "../js/data";
 import { ToastContainer, toast } from 'react-toastify';
 import { signOut } from "firebase/auth";
-import { setDoc, doc, getDocs, collection } from 'firebase/firestore';
+import { setDoc, doc, getDocs, getDoc, updateDoc, collection, query, where } from 'firebase/firestore';
 import { auth, db, } from '../firebaseConfig';
 import LeaderBoard from "../component/LeaderBoard";
-import CardBoard from "../component/CardBoard";
+import CardBoard from "../component/PreferenceCard";
 import { useNavigate } from 'react-router-dom';
 // import { nanoid } from 'nanoid';
 import 'react-toastify/dist/ReactToastify.css';
+
+//onboarding experience.
+import Tour from '../js/tour.js';
 
 
 import "./GamePage.css"
@@ -31,42 +34,105 @@ export default function GamePage() {
     const [nextScramble, setNextScramble] = useState(false);
     const [showAnswerTimer, setShowAnswerTimer] = useState(true);
     const [heartCount, setHeartCount] = useState(["❤️", "❤️", "❤️", "❤️", "❤️"]);
-    const [userStatus, setUserStatus] = useState("Offline");
+    const [userDataExists, setUserDataExists] = useState(false);
+    const [isFirstGame, setIsFirstGame] = useState(null);
     const clickedRef = useRef(false);
+    const DOMloadedRef = useRef(false);
     const userName = auth.currentUser.displayName;
+    const allowCloseBtn = false;
+    const navigationHistory = useNavigate();
     // const nanoidRef = useRef(nanoid());
     // console.log("nanoidRef is: " + nanoidRef.current)
 
-    const navigationHistory = useNavigate();
+
+    useEffect(() => {
+        console.log("DOMloadedRef.current is: " + DOMloadedRef.current)
+        console.log("userDataExists is: " + userDataExists)
+        console.log("isFirstGame is: " + isFirstGame)
+        // const welcomeDriver = driver();
+
+        // // Define the steps for introduction
+        // welcomeDriver.highlight({
+        //     popover: {
+        //         title: 'Welcome to Guess the Word!',
+        //         description: 'This is a simple game where you have to guess the word from the scrambled letters. You have <span style="font-size: 15px; font-weight: bold; color: green;"> 20 seconds </span> to guess the word.',
+        //     },
+        // });
+
+        //You can also submit your score by clicking the End Game button. You can also change the timer duration and the number of reveals in the Preference section. You can also signout by clicking the Signout button. Have fun!
+        if (DOMloadedRef.current) {
+            if (isFirstGame && userDataExists) {
+                Tour(allowCloseBtn)
+            }
+        }
+
+
+    }, [DOMloadedRef.current, userDataExists, isFirstGame]);
+
+
+
+    useEffect(() => {
+        console.log("auth.currentUser is: " + auth.currentUser)
+        console.log("auth.currentUser.uid is: " + auth.currentUser.uid)
+        const fetchUserData = async () => {
+            if (auth.currentUser && auth.currentUser.uid) {
+                const docRef = doc(db, "leaderboard", auth.currentUser.uid);
+
+                try {
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        // User data exists, fetch and update state
+                        const userData = docSnap.data();
+                        setHighScore(userData.highestScore);
+                        setIsFirstGame(userData.isFirstGame);
+                        setUserDataExists(true);
+
+                        // Update status to "Online"
+                        await updateDoc(docRef, { status: "Online", userName: userName, });
+                    } else {
+                        // User data doesn't exist, create a new document
+                        await setDoc(docRef, {
+                            uuid: auth.currentUser.uid,
+                            userName: userName,
+                            score: 0,
+                            highestScore: 0,
+                            status: "Online",
+                            isFirstGame: true,
+                        });
+                        // Now setHighScore to the initial value
+                        setHighScore(0);
+                        setUserDataExists(true);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
+        };
+
+        fetchUserData();
+
+        DOMloadedRef.current = true;
+
+        return () => {
+            // Cleanup
+        };
+    }, [isFirstGame, userName]);
+
 
     // console.log(auth.currentUser)
 
-    useEffect(() => {
-        if (auth.currentUser.uid) {
-            setUserStatus("Online")
-            // db.collection("leaderboard").where("uuid", "==", auth.currentUser.uid)
-            const docRef = getDocs(collection(db, "leaderboard"))
-            docRef.then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    if (doc.data().uuid === auth.currentUser.uid) {
-                        setHighScore(doc.data().highestScore)
-                    }
-                })
-            })
-        } else {
-            setUserStatus("Offline")
-        }
-    }, [userStatus])
 
     async function submitScore() {
         try {
-            const docRef = await setDoc(doc(db, "leaderboard", auth.currentUser.uid), {
-                uuid: auth.currentUser.uid,
-                userName: userName,
+            const docRef = doc(db, "leaderboard", auth.currentUser.uid);
+
+            await updateDoc(docRef, {
+                status: "Online",
                 score: pointCount,
-                highestScore: pointCount >= highScore ? pointCount : highScore,
-                status: userStatus,
-            })
+                highestScore: highScore,
+                isFirstGame: false,
+            });
             // console.log("Document written with ID: ", docRef.id);
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -84,11 +150,9 @@ export default function GamePage() {
     function scrambleWord(word) {
         let scrambledWord = word.split('').sort(function () { return 0.5 - Math.random() }).join('');
         setScrambledWord(scrambledWord.split(''))
-        // console.log("Scrambled word is: " + scrambledWord.split(''))
         setWordPointCount(scrambledWord.split('').length)
         return scrambledWord;
     }
-    // console.log("Answer is: " + word)
 
     function handleStartGame() {
         setGameStart(true);
@@ -96,16 +160,12 @@ export default function GamePage() {
         getRandomWord()
         setRevealedWord(currentWord)
         setHeartCount(["❤️", "❤️", "❤️", "❤️", "❤️"])
-        // resetTimer() // Reset the timer when starting a new word
-        // console.log("Revealed word is: " + revealedWord)
     }
 
     function onTimeUp() {
         endGame()
         handleNext()
         setHeartCount(prevHeartCount => prevHeartCount.slice(0, -1))
-        // resetTimer(); // Reset the timer when time is up
-        // console.log("timerCounter is: " + timerCounter);
         setPointCount(prevValue => (prevValue <= 0 ? 0 : prevValue - wordPointCount))
         // toast("Time is up!")
     }
@@ -113,13 +173,11 @@ export default function GamePage() {
     function handleSkip() {
         endGame()
         setHeartCount(prevHeartCount => prevHeartCount.slice(0, -1))
-        console.log("Heart count is: " + heartCount.length)
         setPointCount(prevValue => (prevValue <= 0 ? 0 : prevValue - wordPointCount))
         handleNext()
     }
 
     function handleNext() {
-        // setRevealedWord(null)
         setShowAnswerTimer(false)
         getRandomWord()
         setInput("")
@@ -136,7 +194,6 @@ export default function GamePage() {
         }
         else if (revealedWord === currentWord) {
             setInput(currentWord);
-            // console.log("Revealed word is: " + revealedWord)
         } else {
             setRevealCount(prevRevealCount => prevRevealCount - 1)
             setInput(currentWord);
@@ -158,23 +215,40 @@ export default function GamePage() {
         }
     }
 
-    function handleSignout() {
-        if (window.confirm("Are you sure you want to Sign out?")) {
-            signOut(auth).then(() => {
-                // Sign-out successful.
-                setGameStart(false);
-                setUserStatus("Offline")
-                console.log("Signout successful")
-                // console.log(val, "val")
-                navigationHistory('/')
-            })
+    async function handleSignout() {
+        if (window.confirm("Are you sure you want to Sign out? You will lose all your progress except your Highest Score!")) {
+            setGameStart(false);
+            try {
+                const docRef = doc(db, "leaderboard", auth.currentUser.uid);
+
+                await updateDoc(docRef, {
+                    status: "Offline",
+                    userName: userName,
+                    score: pointCount,
+                    highestScore: highScore,
+                });
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            } finally {
+                setTimeout(() => {
+                    signOut(auth).then(() => {
+                        // Sign-out successful.
+                        console.log("Signout successful")
+                        navigationHistory('/')
+                    })
+                }, 2000);
+
+            }
         }
     }
 
-    // function pauseGame() {
-    //     // setNextScramble(false);
-    //     setGameStart(false);
-    // }
+
+
+    useEffect(() => {
+        setHighScore(prevScore => (prevScore <= pointCount ? pointCount : prevScore))
+        console.log("High score is: " + highScore)
+    }, [pointCount])
 
     function handleEndGame() {
         setGameStart(false);
@@ -185,22 +259,20 @@ export default function GamePage() {
     function endGame() {
         if (heartCount.length === 0) {
             setGameStart(false);
-            submitScore()
             setHeartCount([])
             console.log("Game ended")
         }
     }
 
-
     return (
         <>
             <div className='sm:flex md:hidden lg:hidden xl:hidden 2xl:hidden bg-gradient-to-r from-gray-600 to-gray-700 p-8 w-full h-screen flex justify-center items-center'>
-                <ScreenSizeWarning userName={userName} />
+                <ScreenSizeWarning userName={userName ? userName : "User"} />
             </div>
-            <div className='sm:hidden md:hidden lg:flex bg-gradient-to-r from-gray-600 to-gray-700 p-8 w-full h-full xl:h-screen flex justify-center '>
+            <div className='sm:hidden md:hidden lg:flex bg-gradient-to-r from-gray-600 to-gray-700 flex justify-center '>
                 {/* {console.log("wordPointCount is: " + wordPointCount)} */}
-                <div className='rounded-lg  flex w-full justify-evenly gap-2'>
-                    <div className="w-3/5 px-32 bg-slate-50 rounded-2xl shadow-2xl">
+                <div className='rounded-lg flex w-full h-screen p-8 justify-evenly gap-2'>
+                    <div className="w-3/5 px-32 bg-slate-50 rounded-2xl shadow-2xl h-full">
                         <h1 className='text-2xl text-center font-bold mb-4'>Guess the word</h1>
                         <div className="flex justify-between mb-2">
                             <p id="hearts">
@@ -210,7 +282,11 @@ export default function GamePage() {
                                     ))
                                 }
                             </p>
-                            <p id="user-points" className="font-medium">Points: {pointCount}</p>
+                            <div id="scoreBox" className="flex gap-4">
+                                <p id="user-points" className="font-medium">High score: {highScore}</p>
+                                <p id="user-points" className="font-medium">Points: {pointCount}</p>
+
+                            </div>
                         </div>
                         <div className="w-full mb-2 h-4">
                             {showAnswerTimer && <AnswerTimer
@@ -223,11 +299,11 @@ export default function GamePage() {
                             />}
                             <ToastContainer />
                         </div>
-                        <div className="h-20 bg-yellow-500 p-2 rounded-xl overflow-x-hidden overflow-y-auto">
+                        <div id="hintBox" className="h-20 bg-yellow-500 p-2 rounded-xl overflow-x-hidden overflow-y-auto">
                             <p className="font-medium ">Hint: <span className="font-normal">{hint}</span></p>
                         </div>
 
-                        <div className="scrambled-word shadow rounded-xl p-2 h-36 my-5">
+                        <div id="scrambleWord" className="scrambled-word shadow rounded-xl p-2 h-36 my-5">
                             <h2 className="flex justify-center flex-wrap  ">
 
                                 {
@@ -240,6 +316,7 @@ export default function GamePage() {
 
                         <div className="mb-5  ">
                             <Input
+                                id="userAnswer"
                                 size="sm"
                                 className="
                                     rounded-xl
@@ -255,13 +332,13 @@ export default function GamePage() {
                             />
                         </div>
                         <div className="flex justify-between mb-2">
-                            <Button color="warning" className="w-2/5" onClick={handleReveals} isDisabled={!gameStart}>Reveal <span>({revealCount})</span></Button>
-                            <Button onClick={handleSkip} color="danger" className="w-2/5" isDisabled={!gameStart || heartCount.length === 0}>Skip <span></span></Button>
+                            <Button id="revealBtn" color="warning" className="w-2/5" onClick={handleReveals} isDisabled={!gameStart}>Reveal <span>({revealCount})</span></Button>
+                            <Button id="skipBtn" onClick={handleSkip} color="danger" className="w-2/5" isDisabled={!gameStart || heartCount.length === 0}>Skip <span></span></Button>
                         </div>
                         {!gameStart ? <Button onClick={handleStartGame} color="success" className="w-full mb-2">Start</Button>
                             : <Button onClick={handleSubmit} color="success" className="w-full mb-2">Submit <span></span></Button>}
                         <div className="flex justify-between mb-2">
-                            <Button onClick={handleEndGame} color="danger" className="w-full" isDisabled={!gameStart}>End Game <span></span></Button>
+                            <Button id="endGameBtn" onClick={handleEndGame} color="danger" className="w-full" isDisabled={!gameStart}>End Game <span></span></Button>
 
                         </div>
 
@@ -270,7 +347,7 @@ export default function GamePage() {
                     <div className="px-4 bg-slate-300 flex flex-col items-center rounded-2xl shadow-2xl">
                         <h1 className='text-2xl font-bold mb-2'>Leader board</h1>
                         <div className="mb-2">
-                            <LeaderBoard />
+                            <LeaderBoard tour={Tour} />
                         </div>
                         <h1 className='text-2xl font-bold mb-2'>Preference</h1>
                         <div className="mb-4">
@@ -285,3 +362,10 @@ export default function GamePage() {
         </>
     )
 }
+
+
+
+// function pauseGame() {
+//     // setNextScramble(false);
+//     setGameStart(false);
+// }
