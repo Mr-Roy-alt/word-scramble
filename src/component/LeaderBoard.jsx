@@ -68,7 +68,7 @@ export default function LeaderBoard() {
                             <TableCell>{item.userName}</TableCell>
                             <TableCell>{item.highestScore}</TableCell>
                             <TableCell>
-                                <Chip color={item.status == "Online" ? "success" : "danger"} variant="dot">{item.status}</Chip>
+                                <Chip color={item.isOnline == true ? "success" : "danger"} variant="dot">{item.status}</Chip>
                             </TableCell>
                         </TableRow>
                     ))

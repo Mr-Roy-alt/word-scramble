@@ -89,7 +89,7 @@ export default function GamePage() {
                         setUserDataExists(true);
 
                         // Update status to "Online"
-                        await updateDoc(docRef, { status: "Online", userName: userName, });
+                        await updateDoc(docRef, { status: "Online", userName: userName, isOnline: true, });
                     } else {
                         // User data doesn't exist, create a new document
                         await setDoc(docRef, {
@@ -99,6 +99,7 @@ export default function GamePage() {
                             highestScore: 0,
                             status: "Online",
                             isFirstGame: true,
+                            isOnline: true,
                         });
                         // Now setHighScore to the initial value
                         setHighScore(0);
@@ -227,6 +228,7 @@ export default function GamePage() {
                     userName: userName,
                     score: pointCount,
                     highestScore: highScore,
+                    isOnline: false,
                 });
 
             } catch (error) {
