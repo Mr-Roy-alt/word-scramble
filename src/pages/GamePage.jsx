@@ -133,6 +133,7 @@ export default function GamePage() {
                 score: pointCount,
                 highestScore: highScore,
                 isFirstGame: false,
+                isOnline: true,
             });
             // console.log("Document written with ID: ", docRef.id);
         } catch (error) {
