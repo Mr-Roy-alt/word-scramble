@@ -41,25 +41,10 @@ export default function GamePage() {
     const userName = auth.currentUser.displayName;
     const allowCloseBtn = false;
     const navigationHistory = useNavigate();
-    // const nanoidRef = useRef(nanoid());
-    // console.log("nanoidRef is: " + nanoidRef.current)
 
 
     useEffect(() => {
-        // console.log("DOMloadedRef.current is: " + DOMloadedRef.current)
-        // console.log("userDataExists is: " + userDataExists)
-        // console.log("isFirstGame is: " + isFirstGame)
-        // const welcomeDriver = driver();
 
-        // // Define the steps for introduction
-        // welcomeDriver.highlight({
-        //     popover: {
-        //         title: 'Welcome to Guess the Word!',
-        //         description: 'This is a simple game where you have to guess the word from the scrambled letters. You have <span style="font-size: 15px; font-weight: bold; color: green;"> 20 seconds </span> to guess the word.',
-        //     },
-        // });
-
-        //You can also submit your score by clicking the End Game button. You can also change the timer duration and the number of reveals in the Preference section. You can also signout by clicking the Signout button. Have fun!
         if (DOMloadedRef.current) {
             if (isFirstGame && userDataExists) {
                 Tour(allowCloseBtn)
@@ -72,8 +57,6 @@ export default function GamePage() {
 
 
     useEffect(() => {
-        console.log("auth.currentUser is: " + auth.currentUser)
-        console.log("auth.currentUser.uid is: " + auth.currentUser.uid)
         const fetchUserData = async () => {
             if (auth.currentUser && auth.currentUser.uid) {
                 const docRef = doc(db, "leaderboard", auth.currentUser.uid);
@@ -121,9 +104,6 @@ export default function GamePage() {
     }, [isFirstGame, userName]);
 
 
-    // console.log(auth.currentUser)
-
-
     async function submitScore() {
         try {
             const docRef = doc(db, "leaderboard", auth.currentUser.uid);
@@ -135,7 +115,6 @@ export default function GamePage() {
                 isFirstGame: false,
                 isOnline: true,
             });
-            // console.log("Document written with ID: ", docRef.id);
         } catch (error) {
             console.error("Error adding document: ", error);
         }
@@ -273,7 +252,6 @@ export default function GamePage() {
                 <ScreenSizeWarning userName={userName ? userName : "User"} />
             </div>
             <div className='sm:hidden md:hidden lg:flex bg-gradient-to-r from-gray-600 to-gray-700 flex justify-center '>
-                {/* {console.log("wordPointCount is: " + wordPointCount)} */}
                 <div className='rounded-lg flex w-full h-screen p-8 justify-evenly gap-2'>
                     <div className="w-3/5 px-32 bg-slate-50 rounded-2xl shadow-2xl h-full">
                         <h1 className='text-2xl text-center font-bold mb-4'>Guess the word</h1>

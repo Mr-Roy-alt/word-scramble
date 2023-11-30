@@ -4,6 +4,7 @@ import { Button, Input } from "@nextui-org/react";
 import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 // import PropTypes from 'prop-types';
 
 // Desc: Sign In page
@@ -30,17 +31,31 @@ export default function SignIn() {
     function handleSignIn(e) {
         e.preventDefault();
         signInWithEmailAndPassword(auth, userData.email, userData.password)
-            .then((data) => {
-                console.log("-----------------------------------------");
-                // console.log(data, "authData");
-
-                navigationHistory('/game');
+            .then(() => {
+                // Signed in
+                toast.success("Signed in successfully",{
+                    position: "top-right",
+                    autoClose: 5000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "colored",
+                })
+                setTimeout(() => {
+                    navigationHistory('/game');
+                },5000)
+                clearTimeout();
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                // console.log(errorCode, errorMessage);
-                alert(errorCode);
+                toast.error(errorCode,{
+                    position: "top-right",
+                    autoClose: 5000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "colored",
+                });
                 // ..
             });
     }
@@ -49,22 +64,44 @@ export default function SignIn() {
         e.preventDefault();
 
         if (userData.userName.length > 6) {
-            alert("username can't be above 6 characters");
+            // alert("username can't be above 6 characters");
+            toast.error("Username can't be above 6 characters",{
+                position: "top-right",
+                autoClose: 5000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "colored",
+            });
             return;
         }
 
         if (userData.password !== userData.confirmPassword) {
-            alert("passwords don't match");
+            toast.error("passwords don't match",{
+                position: "top-right",
+                autoClose: 5000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "colored",
+            });
             return;
         }
 
         if (userData.password.length < 6) {
-            alert("passwords must be at least 6 characters");
+            toast.error("passwords must be at least 6 characters",{
+                position: "top-right",
+                autoClose: 5000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "colored",
+            });
             return;
         }
 
         createUserWithEmailAndPassword(auth, userData.email, userData.password)
-            .then((data) => {
+            .then(() => {
                 updateProfile(auth.currentUser, {
                     displayName: userData.userName,
                 }).then(() => {
@@ -77,9 +114,6 @@ export default function SignIn() {
                     console.log(errorCode, errorMessage);
                     // ...
                 });
-
-                console.log("-----------------------------------------");
-                // console.log(data, "authData");
                 navigationHistory('/game');
             })
             .catch((error) => {
@@ -95,10 +129,10 @@ export default function SignIn() {
     return (
         <>
             <div className='bg-gradient-to-r from-cyan-400 to-blue-400 p-8 text-center w-screen h-screen flex justify-center items-center sm:w-full'>
+                <ToastContainer />
                 {
                     signInPage ?
                         <div className='sm:w-full w-1/4'>
-                            {/* {console.log(userData)} */}
                             <h1 className='font-bold text-indigo-800 text-2xl drop-shadow-md'>Scramble Game</h1>
                             <h3 className='mb-5 font-medium'>Welcome back!!! 😎</h3>
                             <div>
@@ -139,7 +173,6 @@ export default function SignIn() {
                         </div> :
 
                         <div className='sm:w-full w-1/4'>
-                            {/* {console.log(userData)} */}
                             <h1 className='font-bold text-indigo-800 text-2xl drop-shadow-md'>Scramble Game</h1>
                             <h3 className='mb-5'>SignUP to play 😎</h3>
                             <div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebaseConfig.js';
 import { useNavigate, Outlet } from 'react-router-dom'
@@ -18,7 +18,6 @@ export default function AuthRequired() {
             } else {
                 console.log("user is signed out");
                 setAuthUser(false)
-                // navigationHistory('/')
             }
         });
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { auth, db } from '../firebaseConfig';
-import { getDocs, collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import {
     Table,
     TableHeader,
@@ -60,7 +60,6 @@ export default function LeaderBoard() {
                 isLoading={isLoading}
                 loadingContent={<Spinner color="green" />}
             >
-                {/* {console.log(data)} */}
                 {
                     data.map((item, index) => (
                         <TableRow key={item.uuid} className={item.uuid === userId ? "bg-zinc-200 sticky top-0" : null}>

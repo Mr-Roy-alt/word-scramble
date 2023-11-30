@@ -2,16 +2,13 @@ import { useEffect, useState, useRef } from 'react'
 import { Progress } from "@nextui-org/react";
 import propTypes from 'prop-types'
 
-export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef, nextScramble }) {
+export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef }) {
     const [counter, setCounter] = useState(0);
     const [progressLoaded, setProgressLoaded] = useState(0);
     const [started, setStarted] = useState(clickedRef.current);
     const intervalRef = useRef(null);
 
     useEffect(() => {
-        // console.log("Progressloaded is:", progressLoaded);
-        // console.log("counter is:", counter);
-
 
         if (!gameStart) {
             setCounter(0);
