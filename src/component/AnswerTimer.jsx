@@ -35,7 +35,6 @@ export default function AnswerTimer({ duration, onTimeUp, gameStart, clickedRef 
             clearInterval(intervalRef.current);
             setTimeout(() => {
                 onTimeUp();
-                console.log("Time is up!");
             }, 1000);
         }
     }, [counter, gameStart]);

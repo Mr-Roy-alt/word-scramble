@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { Input, Button, Chip } from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react";
 import { wordList } from "../js/data";
 import { ToastContainer, toast } from 'react-toastify';
 import { signOut } from "firebase/auth";
-import { setDoc, doc, getDocs, getDoc, updateDoc, collection, query, where } from 'firebase/firestore';
+import { setDoc, doc, getDoc, updateDoc} from 'firebase/firestore';
 import { auth, db, } from '../firebaseConfig';
 import LeaderBoard from "../component/LeaderBoard";
 import CardBoard from "../component/PreferenceCard";
@@ -117,6 +117,15 @@ export default function GamePage() {
             });
         } catch (error) {
             console.error("Error adding document: ", error);
+            toast.error("Error adding document: ", error, {
+                position: "top-left",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                theme: "colored",
+            })
         }
     }
 
@@ -171,7 +180,15 @@ export default function GamePage() {
     function handleReveals() {
         setRevealedWord(currentWord)
         if (revealCount === 0) {
-            alert("You have no more reveals left!")
+            toast.error("No more reveals left!",{
+                position: "top-left",
+                autoClose: 2000,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                theme: "colored",
+            
+            })
             return;
         }
         else if (revealedWord === currentWord) {
@@ -240,24 +257,29 @@ export default function GamePage() {
 
     function endGame() {
         if (heartCount.length === 0) {
-            setGameStart(false);
             setPointCount(0)
             setHeartCount([])
+            setGameStart(false);
         }
     }
 
+    // for screen size... I'll handle the whole design later
+    const screenSize ="md:h-screen lg:h-screen xl:h-screen 2xl:h-screen"
+
     return (
         <>
+            <ToastContainer />
             <div className='sm:flex md:hidden lg:hidden xl:hidden 2xl:hidden bg-gradient-to-r from-gray-600 to-gray-700 p-8 w-full h-screen flex justify-center items-center'>
                 <ScreenSizeWarning userName={userName ? userName : "User"} />
             </div>
-            <div className='sm:hidden md:hidden lg:flex bg-gradient-to-r from-gray-600 to-gray-700 flex justify-center '>
-                <div className='rounded-lg flex w-full h-screen p-8 justify-evenly gap-2'>
+            <div className={`sm:hidden md:hidden lg:flex bg-gradient-to-r ${screenSize} from-gray-600 to-gray-700 flex justify-center`}>
+                <div className={`rounded-lg flex w-full h-full p-8 justify-evenly gap-2`}>
                     <div className="w-3/5 px-32 bg-slate-50 rounded-2xl shadow-2xl h-full">
                         <h1 className='text-2xl text-center font-bold mb-4'>Guess the word</h1>
                         <div className="flex justify-between mb-2">
                             <p id="hearts">
-                                {heartCount.length === 0 ? <span>❤️(0)</span> :
+                                {
+                                    heartCount.length === 0 ? <span>❤️(0)</span> :
                                     heartCount.map((heart, index) => (
                                         <span key={index} className="heart">{heart}</span>
                                     ))

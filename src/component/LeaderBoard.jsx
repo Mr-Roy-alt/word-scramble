@@ -62,7 +62,7 @@ export default function LeaderBoard() {
             >
                 {
                     data.map((item, index) => (
-                        <TableRow key={item.uuid} className={item.uuid === userId ? "bg-zinc-200 sticky top-0" : null}>
+                        <TableRow key={item.uuid} className={item.uuid === userId ? "bg-zinc-200" : null}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{item.userName}</TableCell>
                             <TableCell>{item.highestScore}</TableCell>

@@ -35,7 +35,7 @@ export default function SignIn() {
                 // Signed in
                 toast.success("Signed in successfully",{
                     position: "top-right",
-                    autoClose: 5000,
+                    autoClose: 1500,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
@@ -43,7 +43,7 @@ export default function SignIn() {
                 })
                 setTimeout(() => {
                     navigationHistory('/game');
-                },5000)
+                },2000)
                 clearTimeout();
             })
             .catch((error) => {
@@ -106,22 +106,45 @@ export default function SignIn() {
                     displayName: userData.userName,
                 }).then(() => {
                     // Profile updated!
-                    console.log("userName updated seccessfull");
+                    toast.success("Username updated seccessfully",{
+                        position: "top-right",
+                        autoClose: 5000,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "colored",
+                    })
+                    setTimeout(() => {
+                        navigationHistory('/game');
+                    },5000)
+                    clearTimeout();
+                    
                 }).catch((error) => {
                     // An error occurred
                     const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(errorCode, errorMessage);
+                    toast.error(errorCode,{
+                        position: "top-right",
+                        autoClose: 5000,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "colored",
+                    })
                     // ...
                 });
                 navigationHistory('/game');
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, errorMessage);
-                alert(errorCode);
                 setSignInPage(true);
+                toast.error(errorCode,{
+                    position: "top-right",
+                    autoClose: 5000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "colored",
+                })
                 // ..
             });
     }
