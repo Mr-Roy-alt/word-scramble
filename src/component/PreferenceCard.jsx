@@ -29,7 +29,7 @@ export default function PreferenceCard() {
 
         const currentAudioRef = audioRef.current
 
-        setPlay(true);
+        // setPlay(true);
 
         // Listen for the 'ended' event and play the next track
         const handleAudioEnd = () => {
@@ -100,7 +100,7 @@ export default function PreferenceCard() {
             shadow="sm"
         >
             <div className="hidden">
-                <audio ref={audioRef} src={SoundData[currentAudioIndex].src} loop={loopMusic} autoPlay></audio>
+                <audio ref={audioRef} src={SoundData[currentAudioIndex].src} loop={loopMusic}></audio>
             </div>
             <div
                 className="absolute h-full bg-gradient-to-r from-slate-100 to-slate-500 -z-10"
