@@ -19,7 +19,7 @@ function App() {
             <Route path="/game" element={<GamePage />} />
           </Route>
 
-          <Route path="*" element={<h1>Page not found</h1>} />
+          <Route path="*" element={<SignIn />} />
         </Routes>
       </BrowserRouter>
     </>
