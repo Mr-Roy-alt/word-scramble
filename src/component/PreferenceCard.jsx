@@ -31,7 +31,7 @@ export default function PreferenceCard() {
 
         // setPlay(true);
 
-        // Listen for the 'ended' event and play the next track
+        // Listen for the 'ended' event and play the next track.
         const handleAudioEnd = () => {
             if (isRandomAudioActive) {
                 randomAudio()
