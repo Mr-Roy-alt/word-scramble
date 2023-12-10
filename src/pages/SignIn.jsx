@@ -34,7 +34,7 @@ export default function SignIn() {
         signInWithEmailAndPassword(auth, userData.email, userData.password)
             .then(() => {
                 // Signed in
-                toast.success("Signed in successfully",{
+                toast.success("Signed in successfully", {
                     position: "top-right",
                     autoClose: 1500,
                     closeOnClick: true,
@@ -44,12 +44,12 @@ export default function SignIn() {
                 })
                 setTimeout(() => {
                     navigationHistory('/game');
-                },2000)
+                }, 2000)
                 clearTimeout();
             })
             .catch((error) => {
                 const errorCode = error.code;
-                toast.error(errorCode,{
+                toast.error(errorCode, {
                     position: "top-right",
                     autoClose: 5000,
                     closeOnClick: true,
@@ -66,7 +66,7 @@ export default function SignIn() {
 
         if (userData.userName.length > 6) {
             // alert("username can't be above 6 characters");
-            toast.error("Username can't be above 6 characters",{
+            toast.error("Username can't be above 6 characters", {
                 position: "top-right",
                 autoClose: 5000,
                 closeOnClick: true,
@@ -78,7 +78,7 @@ export default function SignIn() {
         }
 
         if (userData.password !== userData.confirmPassword) {
-            toast.error("passwords don't match",{
+            toast.error("passwords don't match", {
                 position: "top-right",
                 autoClose: 5000,
                 closeOnClick: true,
@@ -90,7 +90,7 @@ export default function SignIn() {
         }
 
         if (userData.password.length < 6) {
-            toast.error("passwords must be at least 6 characters",{
+            toast.error("passwords must be at least 6 characters", {
                 position: "top-right",
                 autoClose: 5000,
                 closeOnClick: true,
@@ -107,7 +107,7 @@ export default function SignIn() {
                     displayName: userData.userName,
                 }).then(() => {
                     // Profile updated!
-                    toast.success("Username updated seccessfully",{
+                    toast.success("Username updated seccessfully", {
                         position: "top-right",
                         autoClose: 5000,
                         closeOnClick: true,
@@ -117,13 +117,13 @@ export default function SignIn() {
                     })
                     setTimeout(() => {
                         navigationHistory('/game');
-                    },5000)
+                    }, 5000)
                     clearTimeout();
-                    
+
                 }).catch((error) => {
                     // An error occurred
                     const errorCode = error.code;
-                    toast.error(errorCode,{
+                    toast.error(errorCode, {
                         position: "top-right",
                         autoClose: 5000,
                         closeOnClick: true,
@@ -138,7 +138,7 @@ export default function SignIn() {
             .catch((error) => {
                 const errorCode = error.code;
                 setSignInPage(true);
-                toast.error(errorCode,{
+                toast.error(errorCode, {
                     position: "top-right",
                     autoClose: 5000,
                     closeOnClick: true,
@@ -164,20 +164,26 @@ export default function SignIn() {
                                     <div className='flex flex-col  '>
                                         <Input
                                             type='text'
-                                            placeholder='📧 Email'
+                                            placeholder='Email: test@test.com'
                                             onChange={handleChange}
                                             name='email'
                                             value={userData.email}
                                             className='mb-2 drop-shadow'
+                                            startContent={
+                                                <span className="text-lg font-bold">📧</span>
+                                            }
                                             isRequired={true}
                                         />
                                         <Input
                                             type='password'
-                                            placeholder='🔐 Password'
+                                            placeholder='Password: ******'
                                             onChange={handleChange}
                                             name='password'
                                             value={userData.password}
                                             className='mb-2 drop-shadow'
+                                            startContent={
+                                                <span className="text-lg font-bold">🔐</span>
+                                            }
                                             isRequired={true}
                                         />
                                         <Button type='submit' raduis="sm" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 drop-shadow'>
