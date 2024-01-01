@@ -18,21 +18,32 @@ export default function LeaderBoard() {
     const [data, setData] = useState([]);
     const userId = auth.currentUser.uid;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                onSnapshot(collection(db, 'leaderboard'), (querySnapshot) => {
-                    const newData = querySnapshot.docs.map((doc) => doc.data());
-                    setData(newData.sort((a, b) => b.highestScore - a.highestScore));
-                })
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, [])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             onSnapshot(collection(db, 'leaderboard'), (querySnapshot) => {
+    //                 const newData = querySnapshot.docs.map((doc) => doc.data());
+    //                 setData(newData.sort((a, b) => b.highestScore - a.highestScore));
+    //             })
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [])
+
+    onSnapshot(collection(db, 'leaderboard'), (querySnapshot) => {
+        try {
+            const newData = querySnapshot.docs.map((doc) => doc.data());
+            setData(newData.sort((a, b) => b.highestScore - a.highestScore));
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    })
 
 
     // classNames={{

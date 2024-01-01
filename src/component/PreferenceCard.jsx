@@ -17,7 +17,7 @@ import Tour from '../js/tour.js';
 
 export default function PreferenceCard() {
     const [play, setPlay] = useState(false);
-    const [volume, setVolume] = useState(2);
+    const [volume, setVolume] = useState(1);
     const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
     const [isRandomAudioActive, setIsRandomAudioActive] = useState(false);
     const [loopMusic, setLoopMusic] = useState(false);
