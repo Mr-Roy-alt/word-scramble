@@ -231,14 +231,11 @@ export default function GamePage() {
             } catch (error) {
                 console.error("Error adding document: ", error);
             } finally {
-                setTimeout(() => {
-                    signOut(auth).then(() => {
-                        // Sign-out successful.
-                        console.log("Signout successful")
-                    })
-                    navigationHistory('/')
-                }, 2000);
-
+                signOut(auth).then(() => {
+                    // Sign-out successful.
+                    console.log("Signout successful")
+                })
+                navigationHistory('/')
             }
         }
     }
