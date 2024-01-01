@@ -39,7 +39,7 @@ export default function LeaderBoard() {
             const newData = querySnapshot.docs.map((doc) => doc.data());
             setData(newData.sort((a, b) => b.highestScore - a.highestScore));
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching data nigga:', error);
         } finally {
             setIsLoading(false);
         }

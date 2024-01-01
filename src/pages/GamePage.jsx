@@ -235,8 +235,8 @@ export default function GamePage() {
                     signOut(auth).then(() => {
                         // Sign-out successful.
                         console.log("Signout successful")
-                        navigationHistory('/')
                     })
+                    navigationHistory('/')
                 }, 2000);
 
             }
